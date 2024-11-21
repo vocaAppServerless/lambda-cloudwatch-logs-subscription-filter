@@ -32,6 +32,12 @@ def get_secret():
     return secret
 
 def handler(event, context):
+    
+    print(f"event type => {type(event)}")
+    print(f"event => {event}")
+    print(f"context type => {type(context)}")
+    print(f"context => {context}")
+    
     decoded_data = base64.b64decode(event['awslogs']['data'])
     
     # Gzip 압축 해제

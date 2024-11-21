@@ -1,0 +1,34 @@
+name: CloudWatch Logs Subscription Filter lambda function deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - subscription_filter.py
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Zip Lambda Function
+      run: |
+        mkdir -p ./templates/lambda
+        zip -j ./templates/lambda/lambda_code.zip subscription_filter.py
+    
+    - name: Update Lambda Function Code
+      run: |
+        aws lambda update-function-code \
+          --function-name subscription_filter \
+          --zip-file fileb://./templates/lambda/lambda_code.zip

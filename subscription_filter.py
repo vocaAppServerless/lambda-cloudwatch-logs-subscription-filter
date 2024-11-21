@@ -1,6 +1,8 @@
 def handler(event, context):
     print(f"event type => {type(event)}")
+    print(f"event => {event}")
     print(f"context type => {type(context)}")
+    print(f"context => {context}")
     return {
         "statusCode": 200,
         "event_type": str(type(event)),

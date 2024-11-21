@@ -1,11 +1,12 @@
-
 def handler(event, context):
-    event_type = type(event)
-    context_type = type(context)
     return {
         "statusCode": 200,
-        "event_type": event_type,
+        "event_type": str(type(event)),
         "event": event,
-        "context_type": context_type,
-        "context": context
+        "context_type": str(type(context)),
+        "context": {
+            "function_name": context.function_name,
+            "memory_limit_in_mb": context.memory_limit_in_mb,
+            "aws_request_id": context.aws_request_id
+        }
     }

@@ -52,13 +52,6 @@ jobs:
         LAYER_NAME=$(aws ssm get-parameter --name "/remember-me/python_lambda_layer_name" --query 'Parameter.Value' --output text)
         echo "LAYER_NAME=$LAYER_NAME" >> $GITHUB_ENV
 
-    - name: Install Dependencies and Create Layer
-      run: |
-        mkdir -p ./layer/python
-        # Install dependencies into layer directory
-        poetry export -f requirements.txt --without-hashes | pip install -r /dev/stdin -t ./layer/python
-        cd ./layer && zip -r ../lambda_layer.zip . && cd ..
-    
     - name: Update Lambda Layer
       run: |
         LAYER_VERSION_ARN=$(aws lambda publish-layer-version \
@@ -83,6 +76,12 @@ jobs:
         aws lambda update-function-code \
           --function-name subscription_filter \
           --zip-file fileb://./templates/lambda/lambda_code.zip
+      
+    # 위의 업데이트 작업이 진행 중 람다 layer를 업데이트를 시도할시 충돌이 발생. 이를 해결하기 위해 추가
+    - name: Wait for Lambda Function Update
+      run: |
+        aws lambda wait function-updated \
+          --function-name subscription_filter
 
     # Lambda 함수에 새로운 레이어 버전 적용
     - name: Get Lambda Layer ARN from Parameter Store

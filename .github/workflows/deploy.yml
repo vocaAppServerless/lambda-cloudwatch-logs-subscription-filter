@@ -22,11 +22,24 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
     
-    - name: Install Poetry
+    - name: Install Poetry and Plugins
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
         export PATH="$HOME/.local/bin:$PATH"
+        poetry self add poetry-plugin-export
         poetry --version
+    
+    - name: Install Dependencies and Create Layer
+      run: |
+        mkdir -p ./layer/python
+        poetry export -f requirements.txt --without-hashes | pip install -r /dev/stdin -t ./layer/python
+        cd ./layer && zip -r ../lambda_layer.zip . && cd ..
+    
+    - name: Debug ZIP File
+      run: |
+        ls -l ./layer/python
+        unzip -l lambda_layer.zip
+
     
     - name: Get Lambda Layer Name from Parameter Store
       id: get-layer-name

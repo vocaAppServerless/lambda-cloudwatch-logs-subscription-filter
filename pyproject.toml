@@ -7,6 +7,8 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "3.12.7"
+requests = "^2.32.3"
+boto3 = "^1.35.66"
 
 
 [build-system]

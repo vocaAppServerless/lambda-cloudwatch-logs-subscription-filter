@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "lambda-cloudwatch-logs-subscription-filter"
+version = "0.1.0"
+description = "lambda function for cloudwatch logs subscription filter"
+authors = ["KKamJi <xowl5460@naver.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.12.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

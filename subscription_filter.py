@@ -52,7 +52,8 @@ def handler(event, context):
         timestamp = log_event['timestamp']
         timestamp_in_seconds = timestamp / 1000
         readable_time = datetime.fromtimestamp(timestamp_in_seconds, tz=kst).isoformat()
-        log_data['logEvents'][0]['timestamp'] = readable_time
+        log_event['timestamp'] = readable_time
+        log_event['@timestamp'] = readable_time  # @timestamp 필드 추가
     print(log_data)
     
     # Logstash로 전송할 URL

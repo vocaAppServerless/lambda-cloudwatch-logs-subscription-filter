@@ -56,7 +56,7 @@ def handler(event, context):
         delivery_dict = {
             "logGroup": log_data["logGroup"],
             "eventId": log_event["id"],
-            "timestamp": log_event["timestamp"],
+            "@timestamp": log_event["timestamp"],
             "message": log_event["message"],
         }
         print(delivery_dict)

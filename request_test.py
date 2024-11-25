@@ -41,7 +41,7 @@ def send_requests(api_endpoint, num_requests):
 
         print(f"Request to {path} ({method}): Status Code {response.status_code}")
 
-        time.sleep(random.uniform(0.5, 2))
+        # time.sleep(random.uniform(0.5, 2))
     
     
 if __name__ == "__main__":

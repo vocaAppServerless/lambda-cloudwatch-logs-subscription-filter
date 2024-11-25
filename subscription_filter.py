@@ -24,6 +24,22 @@ def get_secret():
     secret = json.loads(get_secret_value_response["SecretString"])
     return secret
 
+def determine_status(message: str) -> str:
+    """
+    로그 메시지에서 상태를 판별하여 반환
+    """
+    if "CRITICAL" in message:
+        return "CRITICAL"
+    elif "ERROR" in message:
+        return "ERROR"
+    elif "WARNING" in message:
+        return "WARNING"
+    elif "INFO" in message:
+        return "INFO"
+    elif "DEBUG" in message:
+        return "DEBUG"
+    else:
+        return "NORMAL"
 
 def handler(event, context):
     # print(f"event type => {type(event)}")
@@ -52,12 +68,16 @@ def handler(event, context):
         readable_time = datetime.fromtimestamp(timestamp_in_seconds, tz=kst).isoformat()
         log_event["timestamp"] = readable_time
         
+        message = log_event["message"]
+        status = determine_status(message)
+        
         delivery_dict = dict
         delivery_dict = {
             "logGroup": log_data["logGroup"],
             "eventId": log_event["id"],
             "@timestamp": log_event["timestamp"],
             "message": log_event["message"],
+            "status": status
         }
         print(delivery_dict)
         # Logstash로 개별 로그 이벤트 전송
